@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1482687806054832258}
   - component: {fileID: -7970284703566096155}
   - component: {fileID: 3115472137337278530}
+  - component: {fileID: 588627446538790605}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -170,3 +171,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   efectoImpacto: {fileID: 0}
+  prefabLaser: {fileID: 0}
+  duracionLaser: 0.05
+--- !u!114 &588627446538790605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6693173636047315531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 503835b67437120459bb5537197f48ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  gameOverUI: {fileID: 0}
+  healthSlider: {fileID: 0}
