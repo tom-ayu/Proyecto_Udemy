@@ -5,6 +5,7 @@ public class PlayerHealth : MonoBehaviour, IDañable
 {
     public int maxHealth = 10;
     private int currentHealth;
+    public GameObject resumeButton;
 
     private UIController uiController;
 
@@ -28,10 +29,13 @@ public class PlayerHealth : MonoBehaviour, IDañable
     void Morir()
     {
         if (uiController != null)
-            uiController.MostrarGameOver();
+            uiController.MostrarPause();
+            resumeButton.SetActive(false);
 
-        // Desactivar control
         PlayerController control = GetComponent<PlayerController>();
         if (control != null) control.enabled = false;
+
+        PlayerShooter shooter = GetComponent<PlayerShooter>();
+        if (shooter != null) shooter.enabled = false;
     }
 }

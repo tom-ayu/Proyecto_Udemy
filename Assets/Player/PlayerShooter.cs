@@ -10,6 +10,13 @@ public class PlayerShooter : MonoBehaviour
 
     public float duracionLaser = 0.05f;
 
+    public AudioClip shootSound;
+    private AudioSource audioSource;
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -20,6 +27,8 @@ public class PlayerShooter : MonoBehaviour
 
     void Disparar()
     {
+        if (shootSound != null && audioSource != null)
+            audioSource.PlayOneShot(shootSound);
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         RaycastHit hit;
 
@@ -30,7 +39,8 @@ public class PlayerShooter : MonoBehaviour
             puntoFinal = hit.point;
 
             if (efectoImpacto != null)
-                Instantiate(efectoImpacto, hit.point, Quaternion.LookRotation(hit.normal));
+                Destroy(Instantiate(efectoImpacto, hit.point, Quaternion.LookRotation(hit.normal)), 1.5f);
+
 
             IDañable dañable = hit.collider.GetComponent<IDañable>();
             if (dañable != null)

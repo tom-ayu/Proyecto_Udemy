@@ -8,17 +8,17 @@ public class EnemyShooterAI : MonoBehaviour, IDañable
     public float distanciaDisparo = 10f;
     public float tiempoEntreDisparos = 1.5f;
     public LayerMask capaObjetivo;
-
     [Header("Disparo")]
-    public GameObject laserPrefab; // Prefab con LineRenderer activo
+    public GameObject laserPrefab;
     public float duracionLaser = 0.1f;
-
+    public AudioClip shootEnemy;
     [Header("Vida y Efectos")]
     public int vida = 3;
     public GameObject efectoImpacto;
 
     private NavMeshAgent agente;
     private float tiempoUltimoDisparo;
+    private AudioSource audioSource;
 
     void Start()
     {
@@ -29,6 +29,7 @@ public class EnemyShooterAI : MonoBehaviour, IDañable
         }
 
         agente = GetComponent<NavMeshAgent>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -37,7 +38,6 @@ public class EnemyShooterAI : MonoBehaviour, IDañable
 
         float distancia = Vector3.Distance(transform.position, objetivo.position);
 
-        // Movimiento y rotación
         if (distancia > 1.5f)
         {
             agente.isStopped = false;
@@ -53,7 +53,6 @@ public class EnemyShooterAI : MonoBehaviour, IDañable
         if (direccion.sqrMagnitude > 0.001f)
             transform.rotation = Quaternion.LookRotation(direccion);
 
-        // Disparo
         if (distancia <= distanciaDisparo && Time.time >= tiempoUltimoDisparo)
         {
             Disparar();
@@ -69,14 +68,12 @@ public class EnemyShooterAI : MonoBehaviour, IDañable
         Ray ray = new Ray(origen, direccion);
         if (Physics.Raycast(ray, out RaycastHit hit, distanciaDisparo, capaObjetivo))
         {
-            // Efecto impacto
             if (efectoImpacto != null)
             {
                 GameObject impacto = Instantiate(efectoImpacto, hit.point, Quaternion.LookRotation(hit.normal));
-                Destroy(impacto, 1f); // Se destruye automáticamente después de 1 segundo
+                Destroy(impacto, 1f);
             }
 
-            // Disparo visual (prefab con LineRenderer)
             if (laserPrefab != null)
             {
                 GameObject laser = Instantiate(laserPrefab);
@@ -89,7 +86,11 @@ public class EnemyShooterAI : MonoBehaviour, IDañable
                 Destroy(laser, duracionLaser);
             }
 
-            // Aplicar daño
+            if (shootEnemy != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(shootEnemy);
+            }
+
             IDañable dañable = hit.collider.GetComponent<IDañable>();
             if (dañable != null)
             {
@@ -108,6 +109,6 @@ public class EnemyShooterAI : MonoBehaviour, IDañable
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Player"))
-            Destroy(other.gameObject); // comportamiento personalizado
+            Destroy(other.gameObject);
     }
 }
